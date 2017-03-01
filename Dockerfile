@@ -1,9 +1,12 @@
-FROM alpine:3.2
-MAINTAINER Calvin Leung Huang <https://github.com/calvn>
+FROM alpine:3.5
+MAINTAINER Richard Bolkey <https://github.com/rbolkey>
 
-RUN apk --update add nodejs git openssh ca-certificates && \
+# Need testing in order to use gosu https://pkgs.alpinelinux.org/packages?name=gosu
+RUN echo http://nl.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories && \
+    apk --update add nodejs git openssh ca-certificates gosu util-linux dumb-init sshpass && \
     rm -rf /var/cache/apk/* && \
     npm install git2consul@0.12.13 --global && \
     mkdir -p /etc/git2consul.d
 
-ENTRYPOINT [ "/usr/bin/node", "/usr/lib/node_modules/git2consul" ]
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+ENTRYPOINT ["docker-entrypoint.sh"]
