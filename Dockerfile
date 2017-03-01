@@ -1,7 +1,11 @@
 FROM alpine:3.5
 MAINTAINER Richard Bolkey <https://github.com/rbolkey>
 
-RUN apk --update add nodejs git openssh ca-certificates dumb-init sshpass && \
+# Need testing in order to use gosu https://pkgs.alpinelinux.org/packages?name=gosu
+RUN addgroup -g 1001 git2consul && \
+    adduser -u 1000 -S -G git2consul git2consul && \
+    echo http://nl.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories && \
+    apk --update add nodejs git openssh ca-certificates gosu dumb-init sshpass && \
     rm -rf /var/cache/apk/* && \
     npm install git2consul@0.12.13 --global && \
     mkdir -p /etc/git2consul.d

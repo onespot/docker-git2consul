@@ -18,7 +18,7 @@ fi
 
 if ["$1" = 'git2consul']; then
     shift
-    set -- /usr/bin/node /usr/lib/node_modules/git2consul "$@"
+    set -- gosu git2consul /usr/bin/node /usr/lib/node_modules/git2consul "$@"
 fi
 
 exec "$@"
