@@ -18,8 +18,8 @@ if [ -n ${SSH_CLIENT_CONFIG} ]; then
     echo "Wrote: ${HOME}/.ssh/config"
 fi
 
-if [ -n ${SSH_HOST} ]; then
-    if [ -z ${SSH_HOST_FINGERPRINT} ]; then
+if [ -n "${SSH_HOST}" ]; then
+    if [ -z "${SSH_HOST_FINGERPRINT}" ]; then
         echo "SSH_HOST_FINGERPRINT must be defined to verify connection to ${SSH_HOST}"
         exit 1
     fi
