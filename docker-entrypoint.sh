@@ -8,6 +8,7 @@ if [ -n "${SSH_CLIENT_CONFIG}" ]; then
     chmod 700 "${HOME}/.ssh"
     echo "${SSH_CLIENT_CONFIG}" > "${HOME}/.ssh/config"
     chmod 600 "${HOME}/.ssh/config"
+    echo "Wrote: ${HOME}/.ssh/config"
 fi
 
 if [ -n "${SSH_KEY_PASSPHRASE_FILE}" ]; then
