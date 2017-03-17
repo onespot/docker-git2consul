@@ -17,6 +17,8 @@ elif [ -n "${SSH_KEY_PASSWORD_FILE}" ]; then
     export GIT_SSH_COMMAND="sshpass -v -f ${SSH_KEY_PASSWORD_FILE} ${GIT_SSH_COMMAND}"
 fi
 
+echo "Using GIT SSH COMMAND: ${GIT_SSH_COMMAND}"
+
 if [ "$1" == 'git2consul' ]; then
     shift
     set -- gosu git2consul:git2consul /usr/bin/node /usr/lib/node_modules/git2consul "$@"
