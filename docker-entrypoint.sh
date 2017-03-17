@@ -20,7 +20,7 @@ fi
 
 if [ -n "${SSH_HOST}" ]; then
     if [ -z "${SSH_HOST_FINGERPRINT}" ]; then
-        echo "SSH_HOST_FINGERPRINT must be defined to verify connection to ${SSH_HOST}"
+        printf "SSH_HOST_FINGERPRINT must be defined to verify connection to ${SSH_HOST}\n" >&2
         exit 1
     fi
 
@@ -28,12 +28,14 @@ if [ -n "${SSH_HOST}" ]; then
         touch ${KNOWN_HOSTS}
     fi
 
-    ssh-keyscan -H ${SSH_HOST} >> ${KNOWN_HOSTS}
+    ssh-keyscan -H ${SSH_HOST} >> ${KNOWN_HOSTS} 2> /dev/null
 
-    if [ $(ssh-keygen -l -f ${KNOWN_HOSTS} | grep -q ${SSH_HOST_FINGERPRINT}) -eq 0 ]; then
+    ssh-keygen -l -f ${KNOWN_HOSTS} | grep -e ${SSH_HOST_FINGERPRINT}
+    if [ $? -eq 0 ]; then
         echo "Matched fingerprint for ${SSH_HOST}"
     else
-        echo "Fingerprint for ${SSH_HOST} didn't match"
+        printf $?
+        printf "Fingerprint for ${SSH_HOST} didn't match\n" >&2
         exit 1
     fi
 fi
