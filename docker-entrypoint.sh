@@ -12,8 +12,8 @@ if [ ! -d "${HOME}/.ssh" ]; then
 fi
 chmod 700 "${HOME}/.ssh"
 
-if [ -n ${SSH_CLIENT_CONFIG} ]; then
-    echo ${SSH_CLIENT_CONFIG} > "${HOME}/.ssh/config"
+if [ -n "${SSH_CLIENT_CONFIG}" ]; then
+    echo "${SSH_CLIENT_CONFIG}" > "${HOME}/.ssh/config"
     chmod 600 "${HOME}/.ssh/config"
     echo "Wrote: ${HOME}/.ssh/config"
 fi
@@ -28,9 +28,9 @@ if [ -n "${SSH_HOST}" ]; then
         touch ${KNOWN_HOSTS}
     fi
 
-    ssh-keyscan -H ${SSH_HOST} >> ${KNOWN_HOSTS} 2> /dev/null
+    ssh-keyscan -H "${SSH_HOST}" >> ${KNOWN_HOSTS} 2> /dev/null
 
-    ssh-keygen -l -f ${KNOWN_HOSTS} | grep -e ${SSH_HOST_FINGERPRINT}
+    ssh-keygen -l -f ${KNOWN_HOSTS} | grep -q -e ${SSH_HOST_FINGERPRINT}
     if [ $? -eq 0 ]; then
         echo "Matched fingerprint for ${SSH_HOST}"
     else
