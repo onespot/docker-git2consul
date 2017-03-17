@@ -10,6 +10,6 @@ RUN addgroup -g 1001 git2consul && \
     npm install git2consul@0.12.13 --global && \
     mkdir -p /etc/git2consul.d
 
-COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+COPY docker-entrypoint.sh /usr/local/bin
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["git2consul"]
