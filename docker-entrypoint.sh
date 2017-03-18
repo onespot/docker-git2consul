@@ -44,12 +44,12 @@ fi
 
 chown -R "${USER}:${GROUP}" "${HOME}/.ssh"
 
-if [ -f ${SSH_IDENTITY_FILE} ]; then
-    printf "Fingerprint of private key: %s \n" "$(ssh-keygen -E md5 -lf ${SSH_IDENTITY_FILE})"
-fi
-
 if [ -f ${SSH_PASSPHRASE_FILE} ]; then
     printf "SHA of passphrase file: %s \n" "$(shasum ${SSH_PASSPHRASE_FILE})"
+fi
+
+if [ -f ${SSH_IDENTITY_FILE} ]; then
+    printf "Fingerprint of private key: %s \n" "$(sshpass -v -P PEM -f ${SSH_PASSPHRASE_FILE} ssh-keygen -E md5 -lf ${SSH_IDENTITY_FILE})"
 fi
 
 if [ "$1" == 'git2consul' ]; then
