@@ -42,14 +42,6 @@ fi
 
 chown -R "${USER}:${GROUP}" "${HOME}/.ssh"
 
-if [ -n "${SSH_KEY_PASSPHRASE_FILE}" ]; then
-    export GIT_SSH_COMMAND="sshpass -v -P passphrase -f ${SSH_KEY_PASSPHRASE_FILE} ${GIT_SSH_COMMAND}"
-elif [ -n "${SSH_KEY_PASSWORD_FILE}" ]; then
-    export GIT_SSH_COMMAND="sshpass -v -f ${SSH_KEY_PASSWORD_FILE} ${GIT_SSH_COMMAND}"
-fi
-
-echo "Using GIT SSH COMMAND: ${GIT_SSH_COMMAND}"
-
 if [ "$1" == 'git2consul' ]; then
     shift
     set -- gosu "${USER}:${GROUP}" /usr/bin/node /usr/lib/node_modules/git2consul "$@"
