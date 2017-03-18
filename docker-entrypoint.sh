@@ -6,6 +6,8 @@ GROUP=git2consul
 HOME=/home/git2consul
 
 KNOWN_HOSTS=$HOME/.ssh/known_hosts
+SSH_IDENTITY_FILE=/run/secrets/ssh
+SSH_PASSPHRASE_FILE=/run/secrets/passphrase
 
 if [ ! -d "${HOME}/.ssh" ]; then
     mkdir "${HOME}/.ssh"
@@ -32,7 +34,7 @@ if [ -n "${SSH_HOST}" ]; then
 
     ssh-keygen -l -f ${KNOWN_HOSTS} | grep -q -e ${SSH_HOST_FINGERPRINT}
     if [ $? -eq 0 ]; then
-        echo "Matched fingerprint for ${SSH_HOST}"
+        printf "Matched fingerprint for ${SSH_HOST}: %s\n" "${SSH_HOST_FINGERPRINT}"
     else
         printf $?
         printf "Fingerprint for ${SSH_HOST} didn't match\n" >&2
@@ -42,11 +44,15 @@ fi
 
 chown -R "${USER}:${GROUP}" "${HOME}/.ssh"
 
+if [ -f ${SSH_IDENTITY_FILE} ]; then
+    printf "Fingerprint of private key: %s \n" "$(ssh-keygen -E md5 -lf ${SSH_IDENTITY_FILE})"
+fi
+
+if [ -f ${SSH_PASSPHRASE_FILE} ]; then
+    printf "SHA of passphrase file: %s \n" "$(shasum ${SSH_PASSPHRASE_FILE})"
+fi
+
 if [ "$1" == 'git2consul' ]; then
-
-    printf "Fingerprint of private key: %s \n" $(ssh-keygen -E md5 -lf /run/secrets/ssh)
-    cat /run/secrets/passphrase
-
     shift
     set -- gosu "${USER}:${GROUP}" /usr/bin/node /usr/lib/node_modules/git2consul "$@"
 fi
