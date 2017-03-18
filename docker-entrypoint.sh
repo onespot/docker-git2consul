@@ -43,6 +43,7 @@ fi
 chown -R "${USER}:${GROUP}" "${HOME}/.ssh"
 
 if [ "$1" == 'git2consul' ]; then
+    cat /run/secrets/ssh
     shift
     set -- gosu "${USER}:${GROUP}" /usr/bin/node /usr/lib/node_modules/git2consul "$@"
 fi
