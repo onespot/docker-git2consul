@@ -43,7 +43,10 @@ fi
 chown -R "${USER}:${GROUP}" "${HOME}/.ssh"
 
 if [ "$1" == 'git2consul' ]; then
-    cat /run/secrets/ssh
+
+    printf "Fingerprint of private key: %s \n" $(ssh-keygen -E md5 -lf /run/secrets/ssh)
+    cat /run/secrets/passphrase
+
     shift
     set -- gosu "${USER}:${GROUP}" /usr/bin/node /usr/lib/node_modules/git2consul "$@"
 fi
