@@ -12,7 +12,6 @@ RUN addgroup -g 1001 git2consul && \
 
 COPY docker-entrypoint.sh /usr/local/bin
 
-USER git2consul
 WORKDIR /home/git2consul
 
 ENTRYPOINT ["docker-entrypoint.sh"]
