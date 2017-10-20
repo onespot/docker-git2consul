@@ -1,4 +1,5 @@
-#!/usr/bin/env bash
+#!/usr/bin/dumb-init /bin/bash
+
 set -e
 
 # usage: file_env VAR [DEFAULT]
