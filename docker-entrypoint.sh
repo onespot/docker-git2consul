@@ -1,6 +1,28 @@
 #!/usr/bin/dumb-init /bin/sh
 set -e
 
+# usage: file_env VAR [DEFAULT]
+#    ie: file_env 'XYZ_DB_PASSWORD' 'example'
+# (will allow for "$XYZ_DB_PASSWORD_FILE" to fill in the value of
+#  "$XYZ_DB_PASSWORD" from a file, especially for Docker's secrets feature)
+file_env() {
+	local var="$1"
+	local fileVar="${var}_FILE"
+	local def="${2:-}"
+	if [ "${!var:-}" ] && [ "${!fileVar:-}" ]; then
+		echo >&2 "error: both $var and $fileVar are set (but are exclusive)"
+		exit 1
+	fi
+	local val="$def"
+	if [ "${!var:-}" ]; then
+		val="${!var}"
+	elif [ "${!fileVar:-}" ]; then
+		val="$(< "${!fileVar}")"
+	fi
+	export "$var"="$val"
+	unset "$fileVar"
+}
+
 USER=git2consul
 GROUP=git2consul
 HOME=/home/git2consul
@@ -8,6 +30,8 @@ HOME=/home/git2consul
 KNOWN_HOSTS=$HOME/.ssh/known_hosts
 SSH_IDENTITY_FILE=/run/secrets/ssh
 SSH_PASSPHRASE_FILE=/run/secrets/passphrase
+
+file_env 'TOKEN'
 
 if [ ! -d "${HOME}/.ssh" ]; then
     mkdir "${HOME}/.ssh"
